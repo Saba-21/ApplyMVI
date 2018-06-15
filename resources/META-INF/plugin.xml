@@ -1,0 +1,35 @@
+<idea-plugin>
+    <id>com.app3null.ApplyMVI</id>
+    <name>ApplyMVI</name>
+    <version>0.0.1</version>
+    <vendor email="S.Khutuashvili@gmail.com" url="https://github.com/saba-21">©Saba Khutuashviili</vendor>
+
+    <description>
+        <![CDATA[
+      A plugin that helps you apply MVI arch pattern to your project.<br>
+      For more details see the docs and sample project<br>
+    ]]>
+    </description>
+
+    <change-notes>
+        <![CDATA[Initial Release<br>]]>
+    </change-notes>
+
+    <idea-version since-build="145.0"/>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <internalFileTemplate name="Text1"/>
+    </extensions>
+
+    <actions>
+        <action id="com.app3null.applymvi.action.CreateFileAction"
+                class="com.app3null.applymvi.action.CreateFileAction"
+                text="ApplyMVI"
+                description="CreateFiles">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
+
+</idea-plugin>
