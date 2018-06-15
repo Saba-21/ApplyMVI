@@ -2,17 +2,19 @@
     <id>com.app3null.ApplyMVI</id>
     <name>ApplyMVI</name>
     <version>0.0.1</version>
-    <vendor email="S.Khutuashvili@gmail.com" url="https://github.com/saba-21">©Saba Khutuashviili</vendor>
+    <vendor email="Saba@app3null.com" url="https://github.com/Saba-21/ApplyMVI">©Saba Khutuashviili</vendor>
 
     <description>
         <![CDATA[
-      A plugin that helps you apply MVI arch pattern to your project.<br>
-      For more details see the docs and sample project<br>
+      An Android studio plugin that helps you apply MVI arch pattern to your project.<br>
+      For further information see docs and sample project.<br>
     ]]>
     </description>
 
     <change-notes>
-        <![CDATA[Initial Release<br>]]>
+        <![CDATA[
+        Initial Release<br>
+    ]]>
     </change-notes>
 
     <idea-version since-build="145.0"/>
