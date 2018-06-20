@@ -15,27 +15,22 @@ import com.intellij.psi.search.PsiShortNamesCache;
 import java.util.Objects;
 
 public class CreateFile extends WriteCommandAction.Simple {
-    private final PsiElementFactory factory;
     private final Project project;
     private final String className;
     private final String packageName;
     private final PsiDirectory directory;
-    private PsiDirectory dirBase, dirCustom, dirBaseActions, dirCustomActions, dirCustomModules, dirCustomFragment1, dirCustomFragment2, dirCustomFragment1Actions, dirCustomFragment2Actions;
+    private PsiDirectory dirBase, dirCustom, dirBaseActions, dirCustomActions, dirCustomModules;
     private PsiClass basePresenter, baseView, baseActivity, baseFragment, baseAction, navigatorAction, viewStateAction;
+    private PsiClass mActivity, mPresenter, mNavigator, mViewState, mView, mFragmentBindingModule, mNavigatorBindingModule, mViewStateAction;
 
 
     public CreateFile(AnActionEvent e, String className) {
         super(e.getProject());
+        IdeView ideView = e.getRequiredData(LangDataKeys.IDE_VIEW);
         this.project = e.getProject();
         this.className = className.substring(0, 1).toUpperCase() + className.substring(1);
         this.packageName = className.toLowerCase();
-        if (project != null) {
-            factory = JavaPsiFacade.getElementFactory(project);
-        } else {
-            factory = null;
-        }
-        IdeView ideView = e.getRequiredData(LangDataKeys.IDE_VIEW);
-        directory = ideView.getOrChooseDirectory();
+        this.directory = ideView.getOrChooseDirectory();
     }
 
     private PsiClass getPsiClassByName(Project project, String name, PsiFile basePresenterPsiFile) {
@@ -84,7 +79,6 @@ public class CreateFile extends WriteCommandAction.Simple {
 
     private void setupBaseClasses() {
         try {
-
             if (dirBase.findFile("BasePresenter.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("BasePresenter.kt"), "BasePresenter", null, dirBase);
             }
@@ -130,74 +124,70 @@ public class CreateFile extends WriteCommandAction.Simple {
             if (dirCustom.findFile(className + "Activity.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Activity.kt"), className + "Activity", null, dirCustom);
             }
-            PsiClass mActivity = getPsiClassByName(project, className + "Activity", dirCustom.findFile(className + "Activity.kt"));
+            mActivity = getPsiClassByName(project, className + "Activity", dirCustom.findFile(className + "Activity.kt"));
 
             if (dirCustom.findFile(className + "Presenter.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Presenter.kt"), className + "Presenter", null, dirCustom);
             }
-            PsiClass mPresenter = getPsiClassByName(project, className + "Presenter", dirCustom.findFile(className + "Presenter.kt"));
+            mPresenter = getPsiClassByName(project, className + "Presenter", dirCustom.findFile(className + "Presenter.kt"));
 
             if (dirCustom.findFile(className + "Navigator.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Navigator.kt"), className + "Navigator", null, dirCustom);
             }
-            PsiClass mNavigator = getPsiClassByName(project, className + "Navigator", dirCustom.findFile(className + "Navigator.kt"));
+            mNavigator = getPsiClassByName(project, className + "Navigator", dirCustom.findFile(className + "Navigator.kt"));
 
             if (dirCustom.findFile(className + "ViewState.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("ViewState.kt"), className + "ViewState", null, dirCustom);
             }
-            PsiClass mViewState = getPsiClassByName(project, className + "ViewState", dirCustom.findFile(className + "ViewState.kt"));
+            mViewState = getPsiClassByName(project, className + "ViewState", dirCustom.findFile(className + "ViewState.kt"));
 
             if (dirCustom.findFile(className + "View.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("View.kt"), className + "View", null, dirCustom);
             }
-            PsiClass mView = getPsiClassByName(project, className + "View", dirCustom.findFile(className + "View.kt"));
+            mView = getPsiClassByName(project, className + "View", dirCustom.findFile(className + "View.kt"));
 
             if (dirCustomModules.findFile(className + "FragmentBindingModule.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("FragmentBindingModule.kt"), className + "FragmentBindingModule", null, dirCustomModules);
             }
-            PsiClass mFragmentBindingModule = getPsiClassByName(project, className + "FragmentBindingModule", dirCustomModules.findFile(className + "FragmentBindingModule.kt"));
+            mFragmentBindingModule = getPsiClassByName(project, className + "FragmentBindingModule", dirCustomModules.findFile(className + "FragmentBindingModule.kt"));
 
             if (dirCustomModules.findFile(className + "NavigatorBindingModule.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("NavigatorBindingModule.kt"), className + "NavigatorBindingModule", null, dirCustomModules);
             }
-            PsiClass mNavigatorBindingModule = getPsiClassByName(project, className + "NavigatorBindingModule", dirCustomModules.findFile(className + "NavigatorBindingModule.kt"));
+            mNavigatorBindingModule = getPsiClassByName(project, className + "NavigatorBindingModule", dirCustomModules.findFile(className + "NavigatorBindingModule.kt"));
 
             if (dirCustomActions.findFile(className + "ViewStateAction.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("ViewStateAction.kt"), className + "ViewStateAction", null, dirCustomActions);
             }
-            PsiClass mViewStateAction = getPsiClassByName(project, className + "ViewStateAction", dirCustomActions.findFile(className + "ViewStateAction.kt"));
-
+            mViewStateAction = getPsiClassByName(project, className + "ViewStateAction", dirCustomActions.findFile(className + "ViewStateAction.kt"));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-//        //Create the import required in classes
-//        PsiImportStatement importBasePresenter = factory.createImportStatement(basePresenter);
-//        PsiImportStatement importBaseView = factory.createImportStatement(baseView);
-//        PsiImportStatement importContract = factory.createImportStatement(contract);
-//        PsiImportStatement importModel = factory.createImportStatement(model);
+    }
+
+    private void setupDependencies() {
+
+//        ((PsiJavaFile) mPresenter.getContainingFile()).getImportList().add(JavaPsiFacade.getElementFactory(project).createImportStatement(basePresenter));
 //
-//        //Add import for classes
-//        ((PsiJavaFile) contract.getContainingFile()).getImportList().add(importBasePresenter);
-//        ((PsiJavaFile) contract.getContainingFile()).getImportList().add(importBaseView);
-//        ((PsiJavaFile) model.getContainingFile()).getImportList().add(importContract);
-//        ((PsiJavaFile) presenter.getContainingFile()).getImportList().add(importContract);
-//        ((PsiJavaFile) presenter.getContainingFile()).getImportList().add(importModel);
+//        if (packageName.equals("aaa")) {
+//            Messages.showErrorDialog("true", "Generated");
+//            return;
+//        }
+
     }
 
     @Override
     protected void run() {
-        if (packageName.equals("aaa")) {
-            Messages.showErrorDialog("true", "Generated");
-            return;
-        }
 
         setupDirectories();
 
         setupBaseClasses();
 
         setupCustomClasses();
+
+        setupDependencies();
 
     }
 }

@@ -20,15 +20,16 @@ public class CreateFileDialog extends JDialog {
         setTitle("New screen directory");
         setContentPane(contentPane);
         setModal(true);
-        setMinimumSize(new Dimension(360, 220));
+        setMinimumSize(new Dimension(660, 420));
         setLocationRelativeTo(null);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(e1 -> onOK(e));
+        buttonOK.addActionListener(e1 -> onConfirm(e));
 
         buttonCancel.addActionListener(e1 -> onCancel());
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
@@ -40,7 +41,7 @@ public class CreateFileDialog extends JDialog {
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onOK(AnActionEvent e) {
+    private void onConfirm(AnActionEvent e) {
         if (TextUtils.isEmpty(textField.getText())) {
             Messages.showErrorDialog("Generation failed, " +
                             "your must enter class name",
@@ -54,6 +55,5 @@ public class CreateFileDialog extends JDialog {
     private void onCancel() {
         dispose();
     }
-
 
 }

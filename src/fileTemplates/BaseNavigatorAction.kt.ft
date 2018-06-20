@@ -2,4 +2,8 @@
 package ${PACKAGE_NAME}
 #end
 
-abstract class BaseNavigatorAction
+abstract class NavigatorAction<out N>(protected val navigator: N): BaseAction {
+
+    abstract fun commitNavigatorAction()
+
+}

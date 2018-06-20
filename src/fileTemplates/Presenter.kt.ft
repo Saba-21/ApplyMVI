@@ -2,4 +2,6 @@
 package ${PACKAGE_NAME}
 #end
 
-class ${NAME}
+import base.BasePresenter
+
+class ${NAME} : BasePresenter
