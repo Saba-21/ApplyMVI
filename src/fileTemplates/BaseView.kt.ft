@@ -3,6 +3,11 @@
 package ${PACKAGE_NAME}
 #end
 
- 
+import io.reactivex.Observable
 
-interface BaseView
+interface BaseView<V: Any>{
+
+    fun subscribe(continuousViewStateObservable: Observable<V>,
+                  viewStateObservable: Observable<V>)
+
+}

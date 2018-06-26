@@ -2,7 +2,7 @@
 package ${PACKAGE_NAME}
 #end
 
-abstract class ViewStateAction<V>: BaseAction {
+abstract class BaseViewStateAction<V>: BaseAction {
 
     abstract fun newState(oldState: V): V
 

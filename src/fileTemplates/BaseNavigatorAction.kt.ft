@@ -2,7 +2,7 @@
 package ${PACKAGE_NAME}
 #end
 
-abstract class NavigatorAction<out N>(protected val navigator: N): BaseAction {
+abstract class BaseNavigatorAction<out N>(protected val navigator: N): BaseAction {
 
     abstract fun commitNavigatorAction()
 
