@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
@@ -19,7 +18,7 @@ public class CreateFile extends WriteCommandAction.Simple {
     private final String className;
     private final String packageName;
     private final PsiDirectory directory;
-    private PsiDirectory dirBase, dirCustom, dirBaseActions, dirCustomActions, dirCustomModules;
+    private PsiDirectory dirBase, dirApp, dirDomain, dirPresentation, dirBaseActions, dirCustomActions, dirCustomModules;
     private PsiClass basePresenter, baseView, baseActivity, baseFragment, baseAction, navigatorAction, viewStateAction;
     private PsiClass mActivity, mPresenter, mNavigator, mViewState, mView, mFragmentBindingModule, mNavigatorBindingModule, mViewStateAction;
 
@@ -55,9 +54,19 @@ public class CreateFile extends WriteCommandAction.Simple {
             dirBase = directory.getParentDirectory().createSubdirectory("base");
         }
 
-        dirCustom = getDirectoryByName(packageName, directory);
-        if (dirCustom == null) {
-            dirCustom = directory.createSubdirectory(packageName);
+        dirApp = getDirectoryByName("app", directory);
+        if (dirApp == null && directory.getParentDirectory() != null) {
+            dirApp = directory.getParentDirectory().createSubdirectory("app");
+        }
+
+        dirDomain = getDirectoryByName("domain", directory);
+        if (dirDomain == null && directory.getParentDirectory() != null) {
+            dirDomain = directory.getParentDirectory().createSubdirectory("domain");
+        }
+
+        dirPresentation = getDirectoryByName(packageName, directory);
+        if (dirPresentation == null) {
+            dirPresentation = directory.createSubdirectory(packageName);
         }
 
         dirBaseActions = dirBase.findSubdirectory("baseActions");
@@ -65,14 +74,14 @@ public class CreateFile extends WriteCommandAction.Simple {
             dirBaseActions = dirBase.createSubdirectory("baseActions");
         }
 
-        dirCustomActions = dirCustom.findSubdirectory("actions");
+        dirCustomActions = dirPresentation.findSubdirectory("actions");
         if (dirCustomActions == null) {
-            dirCustomActions = dirCustom.createSubdirectory("actions");
+            dirCustomActions = dirPresentation.createSubdirectory("actions");
         }
 
-        dirCustomModules = dirCustom.findSubdirectory("modules");
+        dirCustomModules = dirPresentation.findSubdirectory("modules");
         if (dirCustomModules == null) {
-            dirCustomModules = dirCustom.createSubdirectory("modules");
+            dirCustomModules = dirPresentation.createSubdirectory("modules");
         }
 
     }
@@ -121,30 +130,30 @@ public class CreateFile extends WriteCommandAction.Simple {
 
     private void setupCustomClasses() {
         try {
-            if (dirCustom.findFile(className + "Activity.kt") == null) {
-                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Activity.kt"), className + "Activity", null, dirCustom);
+            if (dirPresentation.findFile(className + "Activity.kt") == null) {
+                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Activity.kt"), className + "Activity", null, dirPresentation);
             }
-            mActivity = getPsiClassByName(project, className + "Activity", dirCustom.findFile(className + "Activity.kt"));
+            mActivity = getPsiClassByName(project, className + "Activity", dirPresentation.findFile(className + "Activity.kt"));
 
-            if (dirCustom.findFile(className + "Presenter.kt") == null) {
-                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Presenter.kt"), className + "Presenter", null, dirCustom);
+            if (dirPresentation.findFile(className + "Presenter.kt") == null) {
+                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Presenter.kt"), className + "Presenter", null, dirPresentation);
             }
-            mPresenter = getPsiClassByName(project, className + "Presenter", dirCustom.findFile(className + "Presenter.kt"));
+            mPresenter = getPsiClassByName(project, className + "Presenter", dirPresentation.findFile(className + "Presenter.kt"));
 
-            if (dirCustom.findFile(className + "Navigator.kt") == null) {
-                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Navigator.kt"), className + "Navigator", null, dirCustom);
+            if (dirPresentation.findFile(className + "Navigator.kt") == null) {
+                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("Navigator.kt"), className + "Navigator", null, dirPresentation);
             }
-            mNavigator = getPsiClassByName(project, className + "Navigator", dirCustom.findFile(className + "Navigator.kt"));
+            mNavigator = getPsiClassByName(project, className + "Navigator", dirPresentation.findFile(className + "Navigator.kt"));
 
-            if (dirCustom.findFile(className + "ViewState.kt") == null) {
-                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("ViewState.kt"), className + "ViewState", null, dirCustom);
+            if (dirPresentation.findFile(className + "ViewState.kt") == null) {
+                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("ViewState.kt"), className + "ViewState", null, dirPresentation);
             }
-            mViewState = getPsiClassByName(project, className + "ViewState", dirCustom.findFile(className + "ViewState.kt"));
+            mViewState = getPsiClassByName(project, className + "ViewState", dirPresentation.findFile(className + "ViewState.kt"));
 
-            if (dirCustom.findFile(className + "View.kt") == null) {
-                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("View.kt"), className + "View", null, dirCustom);
+            if (dirPresentation.findFile(className + "View.kt") == null) {
+                FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("View.kt"), className + "View", null, dirPresentation);
             }
-            mView = getPsiClassByName(project, className + "View", dirCustom.findFile(className + "View.kt"));
+            mView = getPsiClassByName(project, className + "View", dirPresentation.findFile(className + "View.kt"));
 
             if (dirCustomModules.findFile(className + "FragmentBindingModule.kt") == null) {
                 FileTemplateUtil.createFromTemplate(FileTemplateManager.getInstance().getTemplate("FragmentBindingModule.kt"), className + "FragmentBindingModule", null, dirCustomModules);
