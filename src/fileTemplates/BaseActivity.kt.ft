@@ -14,9 +14,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-import base.BasePresenter
-import base.BaseView
-
 abstract class BaseActivity<ViewState: Any,
             P : BasePresenter<ViewState, out BaseView<ViewState>>>:
             AppCompatActivity(), HasSupportFragmentInjector {

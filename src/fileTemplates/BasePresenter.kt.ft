@@ -1,13 +1,16 @@
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")
 package ${PACKAGE_NAME}
-#end
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-import base.baseActions.*
+import ${PACKAGE_NAME}.baseActions.BaseAction
+import ${PACKAGE_NAME}.baseActions.BaseNavigatorAction
+import ${PACKAGE_NAME}.baseActions.BaseViewStateAction
+
+#end
 
 abstract class BasePresenter<ViewState : Any, View : BaseView<ViewState>> {
 

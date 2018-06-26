@@ -1,5 +1,6 @@
 package com.app3null.applymvi.CreateFile;
 
+import com.google.common.collect.Lists;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
@@ -7,10 +8,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CreateFile extends WriteCommandAction.Simple {
@@ -179,12 +183,33 @@ public class CreateFile extends WriteCommandAction.Simple {
     private void setupDependencies() {
 
 //        ((PsiJavaFile) mPresenter.getContainingFile()).getImportList().add(JavaPsiFacade.getElementFactory(project).createImportStatement(basePresenter));
-//
-//        if (packageName.equals("aaa")) {
-//            Messages.showErrorDialog("true", "Generated");
-//            return;
-//        }
+//         Messages.showErrorDialog(project.getBasePath(), "true");
 
+    }
+
+    private String getPackageName(String currentDirectory) {
+
+        PsiDirectory parent = directory.getParentDirectory();
+
+        StringBuilder path = new StringBuilder();
+
+        List<String> directories = new ArrayList<>();
+
+        while (parent != null && !parent.getName().equals("src")) {
+            directories.add(parent.getName());
+            parent = parent.getParentDirectory();
+        }
+
+        directories = Lists.reverse(directories);
+
+        for (String item : directories) {
+            path.append(item);
+            path.append('.');
+        }
+
+        path.append(currentDirectory);
+
+        return path.toString();
     }
 
     @Override
